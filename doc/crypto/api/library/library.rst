@@ -1,12 +1,12 @@
-.. SPDX-FileCopyrightText: Copyright 2018-2024 Arm Limited and/or its affiliates <open-source-office@arm.com>
+.. SPDX-FileCopyrightText: Copyright 2018-2026 Arm Limited and/or its affiliates <open-source-office@arm.com>
 .. SPDX-License-Identifier: CC-BY-SA-4.0 AND LicenseRef-Patent-license
 
 |API| library
 =============
 
 .. header:: psa/crypto
-    :seq: 1
-    :copyright: Copyright 2018-2024 Arm Limited and/or its affiliates <open-source-office@arm.com>
+    :seq: 10
+    :copyright: Copyright 2018-2026 Arm Limited and/or its affiliates <open-source-office@arm.com>
     :license: Apache-2.0
     :c++:
     :guard:
@@ -14,7 +14,7 @@
     :include: psa/error.h
 
     /* This file is a reference template for implementation of the
-     * PSA Certified Crypto API v1.2
+     * PSA Certified Crypto API v1.5
      */
 
 

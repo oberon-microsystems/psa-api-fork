@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: Copyright 2018-2024 Arm Limited and/or its affiliates <open-source-office@arm.com>
+# SPDX-FileCopyrightText: Copyright 2018-2026 Arm Limited and/or its affiliates <open-source-office@arm.com>
 # SPDX-License-Identifier: CC-BY-SA-4.0 AND LicenseRef-Patent-license
 
 # PSA Certified API document configuration
@@ -8,29 +8,29 @@
 
 doc_info = {
     # Document template
-    'template': 'psa-api-2022',
+    'template': 'psa-api-2025',
 
     # Document title, MANDATORY
     'title': 'PSA Certified\nCrypto API',
     'author': 'Arm Limited',
 
     # Document copyright date, default to year of 'date'
-    'copyright_date': '2018-2024',
+    'copyright_date': '2018-2026',
     'copyright': 'Arm Limited and/or its affiliates',
 
     # Arm document identifier, marked as open issue if not provided
     'doc_id': 'IHI 0086',
 
     # The short X.Y version. MANDATORY
-    'version': '1.2',
+    'version': '1.5',
     # Arm document quality status, marked as open issue if not provided
     'quality': 'REL',
     # Arm document issue number (within that version and quality status)
     # Marked as open issue if not provided
-    'issue_no': 1,
+    'issue_no': 0,
     # Identifies the sequence number of a release candidate of the same issue
     # default to None
-    'release_candidate': 0,
+    #'release_candidate': 1,
     # Draft status - use this to indicate the document is not ready for publication
     'draft': True,
 
@@ -43,7 +43,7 @@ doc_info = {
     'license': 'psa-certified-api-license',
 
     # Document date, default to build date
-    #'date': '05/02/2024',
+    'date': '28/01/2026',
 
     # Default header file for API definitions
     # default to None, and can be set in documentation source
@@ -94,7 +94,9 @@ doc_info = {
     #   'appendix' : just before the appendices
     #   'chapter'  : before every chapter
     # Default to 'appendix'
-    #'page_break': 'chapter'
+    'page_break': 'chapter',
+
+    'prolog_files': ['/substitutions'],
     }
 
 # absolute or relative path to the psa_spec material from this file

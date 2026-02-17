@@ -1,4 +1,4 @@
-.. SPDX-FileCopyrightText: Copyright 2020-2023 Arm Limited and/or its affiliates <open-source-office@arm.com>
+.. SPDX-FileCopyrightText: Copyright 2020-2026 Arm Limited and/or its affiliates <open-source-office@arm.com>
 .. SPDX-License-Identifier: CC-BY-SA-4.0 AND LicenseRef-Patent-license
 
 .. _appendix-specdef-values:
@@ -39,6 +39,12 @@ Algorithm macros
     #define PSA_ALG_DETERMINISTIC_ECDSA(hash_alg) \
         ((psa_algorithm_t) (0x06000700 | ((hash_alg) & 0x000000ff)))
 
+    #define PSA_ALG_DETERMINISTIC_HASH_ML_DSA(hash_alg) \
+        ((psa_algorithm_t) (0x06004700 | ((hash_alg) & 0x000000ff)))
+
+    #define PSA_ALG_DETERMINISTIC_HASH_SLH_DSA(hash_alg) \
+        ((psa_algorithm_t) (0x06004300 | ((hash_alg) & 0x000000ff)))
+
     #define PSA_ALG_ECDSA(hash_alg) \
         ((psa_algorithm_t) (0x06000600 | ((hash_alg) & 0x000000ff)))
 
@@ -47,6 +53,12 @@ Algorithm macros
 
     #define PSA_ALG_GET_HASH(alg) \
         (((alg) & 0x000000ff) == 0 ? PSA_ALG_NONE : 0x02000000 | ((alg) & 0x000000ff))
+
+    #define PSA_ALG_HASH_ML_DSA(hash_alg) \
+        ((psa_algorithm_t) (0x06004600 | ((hash_alg) & 0x000000ff)))
+
+    #define PSA_ALG_HASH_SLH_DSA(hash_alg) \
+        ((psa_algorithm_t) (0x06004200 | ((hash_alg) & 0x000000ff)))
 
     #define PSA_ALG_HKDF(hash_alg) \
         ((psa_algorithm_t) (0x08000100 | ((hash_alg) & 0x000000ff)))
@@ -75,6 +87,12 @@ Algorithm macros
     #define PSA_ALG_IS_CIPHER(alg) \
         (((alg) & 0x7f000000) == 0x04000000)
 
+    #define PSA_ALG_IS_DETERMINISTIC_HASH_ML_DSA(alg) \
+        (((alg) & ~0x000000ff) == 0x06004700)
+
+    #define PSA_ALG_IS_DETERMINISTIC_HASH_SLH_DSA(alg) \
+        (((alg) & ~0x000000ff) == 0x06004300)
+
     #define PSA_ALG_IS_DETERMINISTIC_ECDSA(alg) \
         (((alg) & ~0x000000ff) == 0x06000700)
 
@@ -92,10 +110,23 @@ Algorithm macros
 
     #define PSA_ALG_IS_HASH_AND_SIGN(alg) \
         (PSA_ALG_IS_RSA_PSS(alg) || PSA_ALG_IS_RSA_PKCS1V15_SIGN(alg) || \
-         PSA_ALG_IS_ECDSA(alg) || PSA_ALG_IS_HASH_EDDSA(alg))
+         PSA_ALG_IS_ECDSA(alg) || PSA_ALG_IS_HASH_EDDSA(alg) || \
+         PSA_ALG_IS_HASH_ML_DSA(alg) || PSA_ALG_IS_HASH_SLH_DSA(alg))
 
     #define PSA_ALG_IS_HASH_EDDSA(alg) \
         (((alg) & ~0x000000ff) == 0x06000900)
+
+    #define PSA_ALG_IS_HASH_ML_DSA(alg) \
+        (((alg) & ~0x000001ff) == 0x06004600)
+
+    #define PSA_ALG_IS_HASH_SLH_DSA(alg) \
+        (((alg) & ~0x000001ff) == 0x06004200)
+
+    #define PSA_ALG_IS_HEDGED_HASH_ML_DSA(alg) \
+        (((alg) & ~0x000000ff) == 0x06004600)
+
+    #define PSA_ALG_IS_HEDGED_HASH_SLH_DSA(alg) \
+        (((alg) & ~0x000000ff) == 0x06004200)
 
     #define PSA_ALG_IS_HKDF(alg) \
         (((alg) & ~0x000000ff) == 0x08000100)
@@ -109,6 +140,9 @@ Algorithm macros
     #define PSA_ALG_IS_HMAC(alg) \
         (((alg) & 0x7fc0ff00) == 0x03800000)
 
+    #define PSA_ALG_IS_JPAKE(alg) \
+        (((alg) & ~0x000000ff) == 0x0a000100)
+
     #define PSA_ALG_IS_KEY_AGREEMENT(alg) \
         (((alg) & 0x7f000000) == 0x09000000)
 
@@ -118,8 +152,20 @@ Algorithm macros
     #define PSA_ALG_IS_KEY_DERIVATION_STRETCHING(alg) \
         (((alg) & 0x7f800000) == 0x08800000)
 
+    #define PSA_ALG_IS_KEY_ENCAPSULATION(alg) \
+        (((alg) & 0x7f000000) == 0x0c000000)
+
+    #define PSA_ALG_IS_KEY_WRAP(alg) \
+        (((alg) & 0x7f000000) == 0x0b000000)
+
     #define PSA_ALG_IS_MAC(alg) \
         (((alg) & 0x7f000000) == 0x03000000)
+
+    #define PSA_ALG_IS_ML_DSA(alg) \
+        (((alg) & ~0x00000100) == 0x06004400)
+
+    #define PSA_ALG_IS_PAKE(alg) \
+        (((alg) & 0x7f000000) == 0x0a000000)
 
     #define PSA_ALG_IS_PBKDF2_HMAC(alg) \
         (((alg) & ~0x000000ff) == 0x08800100)
@@ -146,14 +192,28 @@ Algorithm macros
         (((alg) & 0x7f000000) == 0x06000000)
 
     #define PSA_ALG_IS_SIGN_HASH(alg) \
-        PSA_ALG_IS_SIGN(alg)
+        (PSA_ALG_IS_HASH_AND_SIGN(alg) ||
+        (alg) == PSA_ALG_RSA_PKCS1V15_SIGN_RAW ||
+        (alg) == PSA_ALG_ECDSA_ANY)
 
     #define PSA_ALG_IS_SIGN_MESSAGE(alg) \
         (PSA_ALG_IS_SIGN(alg) && \
          (alg) != PSA_ALG_ECDSA_ANY && (alg) != PSA_ALG_RSA_PKCS1V15_SIGN_RAW)
 
+    #define PSA_ALG_IS_SLH_DSA(alg) \
+        (((alg) & ~0x00000100) == 0x06004000)
+
     #define PSA_ALG_IS_SP800_108_COUNTER_HMAC(alg) \
         (((alg) & ~0x000000ff) == 0x08000700)
+
+    #define PSA_ALG_IS_SPAKE2P(alg) \
+        (((alg) & ~0x000003ff) == 0x0a000400)
+
+    #define PSA_ALG_IS_SPAKE2P_CMAC(alg) \
+        (((alg) & ~0x000000ff) == 0x0a000500)
+
+    #define PSA_ALG_IS_SPAKE2P_HMAC(alg) \
+        (((alg) & ~0x000000ff) == 0x0a000400)
 
     #define PSA_ALG_IS_STANDALONE_KEY_AGREEMENT(alg) \
         (((alg) & 0x7f00ffff) == 0x09000000)
@@ -168,36 +228,61 @@ Algorithm macros
         (((alg) & ~0x000000ff) == 0x08000300)
 
     #define PSA_ALG_IS_WILDCARD(alg) \
-        ((PSA_ALG_GET_HASH(alg) == PSA_ALG_ANY_HASH) || \
-         (((alg) & 0x7f008000) == 0x03008000) || \
-         (((alg) & 0x7f008000) == 0x05008000))
+        (PSA_ALG_GET_HASH(alg) == PSA_ALG_ANY_HASH || \
+         ((alg) & 0x7f008000) == 0x03008000 || \
+         ((alg) & 0x7f008000) == 0x05008000 || \
+         (alg) == PSA_ALG_CCM_STAR_ANY_TAG)
+
+    #define PSA_ALG_IS_WPA3_SAE(alg) \
+        (((alg) & ~0x000001ff) == 0x0a000800)
+
+    #define PSA_ALG_IS_WPA3_SAE_FIXED(alg) \
+        (((alg) & ~0x000000ff) == 0x0a000800)
+
+    #define PSA_ALG_IS_WPA3_SAE_GDH(alg) \
+        (((alg) & ~0x000000ff) == 0x0a000900)
+
+    #define PSA_ALG_IS_WPA3_SAE_H2E(alg) \
+        (((alg) & ~0x000000ff) == 0x08800400)
+
+    #define PSA_ALG_IS_XOF(alg) \
+        (((alg) & 0x7f000000) == 0x0D000000)
+
+    #define PSA_ALG_JPAKE(hash_alg) \
+        ((psa_algorithm_t) (0x0a000100 | ((hash_alg) & 0x000000ff)))
 
     #define PSA_ALG_KEY_AGREEMENT(ka_alg, kdf_alg) \
         ((ka_alg) | (kdf_alg))
 
     #define PSA_ALG_KEY_AGREEMENT_GET_BASE(alg) \
-        ((psa_algorithm_t)((alg) & 0xff7f0000))
+        ((psa_algorithm_t) ((alg) & 0xff7f0000))
 
     #define PSA_ALG_KEY_AGREEMENT_GET_KDF(alg) \
-        ((psa_algorithm_t)((alg) & 0xfe80ffff))
+        ((psa_algorithm_t) ((alg) & 0xfe80ffff))
 
     #define PSA_ALG_PBKDF2_HMAC(hash_alg) \
-        ((psa_algorithm_t)(0x08800100 | ((hash_alg) & 0x000000ff)))
+        ((psa_algorithm_t) (0x08800100 | ((hash_alg) & 0x000000ff)))
 
     #define PSA_ALG_RSA_OAEP(hash_alg) \
-        ((psa_algorithm_t)(0x07000300 | ((hash_alg) & 0x000000ff)))
+        ((psa_algorithm_t) (0x07000300 | ((hash_alg) & 0x000000ff)))
 
     #define PSA_ALG_RSA_PKCS1V15_SIGN(hash_alg) \
-        ((psa_algorithm_t)(0x06000200 | ((hash_alg) & 0x000000ff)))
+        ((psa_algorithm_t) (0x06000200 | ((hash_alg) & 0x000000ff)))
 
     #define PSA_ALG_RSA_PSS(hash_alg) \
-        ((psa_algorithm_t)(0x06000300 | ((hash_alg) & 0x000000ff)))
+        ((psa_algorithm_t) (0x06000300 | ((hash_alg) & 0x000000ff)))
 
     #define PSA_ALG_RSA_PSS_ANY_SALT(hash_alg) \
-        ((psa_algorithm_t)(0x06001300 | ((hash_alg) & 0x000000ff)))
+        ((psa_algorithm_t) (0x06001300 | ((hash_alg) & 0x000000ff)))
 
     #define PSA_ALG_SP800_108_COUNTER_HMAC(hash_alg) \
         ((psa_algorithm_t) (0x08000700 | ((hash_alg) & 0x000000ff)))
+
+    #define PSA_ALG_SPAKE2P_CMAC(hash_alg) \
+        ((psa_algorithm_t) (0x0a000500 | ((hash_alg) & 0x000000ff)))
+
+    #define PSA_ALG_SPAKE2P_HMAC(hash_alg) \
+        ((psa_algorithm_t) (0x0a000400 | ((hash_alg) & 0x000000ff)))
 
     #define PSA_ALG_TLS12_PRF(hash_alg) \
         ((psa_algorithm_t) (0x08000200 | ((hash_alg) & 0x000000ff)))
@@ -208,6 +293,34 @@ Algorithm macros
     #define PSA_ALG_TRUNCATED_MAC(mac_alg, mac_length) \
         ((psa_algorithm_t) (((mac_alg) & ~0x003f8000) | (((mac_length) & 0x3f) << 16)))
 
+    #define PSA_ALG_WPA3_SAE_FIXED(hash_alg) \
+        ((psa_algorithm_t) (0x0a000800 | ((hash_alg) & 0x000000ff)))
+
+    #define PSA_ALG_WPA3_SAE_GDH(hash_alg) \
+        ((psa_algorithm_t) (0x0a000900 | ((hash_alg) & 0x000000ff)))
+
+    #define PSA_ALG_WPA3_SAE_H2E(hash_alg) \
+        ((psa_algorithm_t) (0x08800400 | ((hash_alg) & 0x000000ff)))
+
+    #define PSA_ALG_XOF_HAS_CONTEXT(alg) \
+        (((alg) & 0x00008000) != 0)
+
+    #define PSA_PAKE_PRIMITIVE(pake_type, pake_family, pake_bits) \
+        ((pake_bits & 0xFFFF) != pake_bits) ? 0 :                 \
+        ((psa_pake_primitive_t) (((pake_type) << 24 |             \
+                (pake_family) << 16) | (pake_bits)))
+
+    #define PSA_PAKE_PRIMITIVE_GET_BITS(pake_primitive) \
+        ((size_t)(pake_primitive & 0xFFFF))
+
+    #define PSA_PAKE_PRIMITIVE_GET_FAMILY(pake_primitive) \
+        ((psa_pake_family_t)((pake_primitive >> 16) & 0xFF))
+
+    #define PSA_PAKE_PRIMITIVE_GET_TYPE(pake_primitive) \
+        ((psa_pake_primitive_type_t)((pake_primitive >> 24) & 0xFF))
+
+.. _appendix-specdef-key-values:
+
 Key type macros
 ~~~~~~~~~~~~~~~
 
@@ -217,46 +330,52 @@ Key type macros
         (1u << (((type) >> 8) & 7))
 
     #define PSA_KEY_TYPE_DH_GET_FAMILY(type) \
-        ((psa_dh_family_t) ((type) & 0x00ff))
+        ((psa_dh_family_t) ((type) & 0x007f))
 
     #define PSA_KEY_TYPE_DH_KEY_PAIR(group) \
-        ((psa_key_type_t) (0x7200 | (group)))
+        ((psa_key_type_t) (0x7200 | ((group) & 0x007f)))
 
     #define PSA_KEY_TYPE_DH_PUBLIC_KEY(group) \
-        ((psa_key_type_t) (0x4200 | (group)))
+        ((psa_key_type_t) (0x4200 | ((group) & 0x007f)))
 
     #define PSA_KEY_TYPE_ECC_GET_FAMILY(type) \
-        ((psa_ecc_family_t) ((type) & 0x00ff))
+        ((psa_ecc_family_t) ((type) & 0x007f))
 
     #define PSA_KEY_TYPE_ECC_KEY_PAIR(curve) \
-        ((psa_key_type_t) (0x7100 | (curve)))
+        ((psa_key_type_t) (0x7100 | ((curve) & 0x007f)))
 
     #define PSA_KEY_TYPE_ECC_PUBLIC_KEY(curve) \
-        ((psa_key_type_t) (0x4100 | (curve)))
+        ((psa_key_type_t) (0x4100 | ((curve) & 0x007f)))
 
     #define PSA_KEY_TYPE_IS_ASYMMETRIC(type) \
         (((type) & 0x4000) == 0x4000)
 
     #define PSA_KEY_TYPE_IS_DH(type) \
-        ((PSA_KEY_TYPE_PUBLIC_KEY_OF_KEY_PAIR(type) & 0xff00) == 0x4200)
+        ((PSA_KEY_TYPE_PUBLIC_KEY_OF_KEY_PAIR(type) & 0xff80) == 0x4200)
 
     #define PSA_KEY_TYPE_IS_DH_KEY_PAIR(type) \
-        (((type) & 0xff00) == 0x7200)
+        (((type) & 0xff80) == 0x7200)
 
     #define PSA_KEY_TYPE_IS_DH_PUBLIC_KEY(type) \
-        (((type) & 0xff00) == 0x4200)
+        (((type) & 0xff80) == 0x4200)
 
     #define PSA_KEY_TYPE_IS_ECC(type) \
-        ((PSA_KEY_TYPE_PUBLIC_KEY_OF_KEY_PAIR(type) & 0xff00) == 0x4100)
+        ((PSA_KEY_TYPE_PUBLIC_KEY_OF_KEY_PAIR(type) & 0xff80) == 0x4100)
 
     #define PSA_KEY_TYPE_IS_ECC_KEY_PAIR(type) \
-        (((type) & 0xff00) == 0x7100)
+        (((type) & 0xff80) == 0x7100)
 
     #define PSA_KEY_TYPE_IS_ECC_PUBLIC_KEY(type) \
-        (((type) & 0xff00) == 0x4100)
+        (((type) & 0xff80) == 0x4100)
 
     #define PSA_KEY_TYPE_IS_KEY_PAIR(type) \
         (((type) & 0x7000) == 0x7000)
+
+    #define PSA_KEY_TYPE_IS_ML_DSA(type) \
+        (PSA_KEY_TYPE_PUBLIC_KEY_OF_KEY_PAIR(type) == 0x4002)
+
+    #define PSA_KEY_TYPE_IS_ML_KEM(type) \
+        (PSA_KEY_TYPE_PUBLIC_KEY_OF_KEY_PAIR(type) == 0x4004)
 
     #define PSA_KEY_TYPE_IS_PUBLIC_KEY(type) \
         (((type) & 0x7000) == 0x4000)
@@ -264,14 +383,68 @@ Key type macros
     #define PSA_KEY_TYPE_IS_RSA(type) \
         (PSA_KEY_TYPE_PUBLIC_KEY_OF_KEY_PAIR(type) == 0x4001)
 
+    #define PSA_KEY_TYPE_IS_SLH_DSA(type) \
+        ((PSA_KEY_TYPE_PUBLIC_KEY_OF_KEY_PAIR(type) & 0xff80) == 0x4180)
+
+    #define PSA_KEY_TYPE_IS_SLH_DSA_KEY_PAIR(type) \
+        (((type) & 0xff80) == 0x7180)
+
+    #define PSA_KEY_TYPE_IS_SLH_DSA_PUBLIC_KEY(type) \
+        (((type) & 0xff80) == 0x4180)
+
+    #define PSA_KEY_TYPE_IS_SPAKE2P(type) \
+        ((PSA_KEY_TYPE_PUBLIC_KEY_OF_KEY_PAIR(type) & 0xff80) == 0x4400)
+
+    #define PSA_KEY_TYPE_IS_SPAKE2P_KEY_PAIR(type) \
+        (((type) & 0xff80) == 0x7400)
+
+    #define PSA_KEY_TYPE_IS_SPAKE2P_PUBLIC_KEY(type) \
+        (((type) & 0xff80) == 0x4400)
+
     #define PSA_KEY_TYPE_IS_UNSTRUCTURED(type) \
         (((type) & 0x7000) == 0x1000 || ((type) & 0x7000) == 0x2000)
+
+    #define PSA_KEY_TYPE_IS_WPA3_SAE_DH(type) \
+        (((type) & 0xff80) == 0x3300)
+
+    #define PSA_KEY_TYPE_IS_WPA3_SAE_ECC(type) \
+        (((type) & 0xff80) == 0x3280)
 
     #define PSA_KEY_TYPE_KEY_PAIR_OF_PUBLIC_KEY(type) \
         ((psa_key_type_t) ((type) | 0x3000))
 
     #define PSA_KEY_TYPE_PUBLIC_KEY_OF_KEY_PAIR(type) \
         ((psa_key_type_t) ((type) & ~0x3000))
+
+    #define PSA_KEY_TYPE_SLH_DSA_GET_FAMILY(type) \
+        ((psa_slh_dsa_family_t) ((type) & 0x007f))
+
+    #define PSA_KEY_TYPE_SLH_DSA_KEY_PAIR(set) \
+        ((psa_key_type_t) (0x7180 | ((set) & 0x007f)))
+
+    #define PSA_KEY_TYPE_SLH_DSA_PUBLIC_KEY(set) \
+        ((psa_key_type_t) (0x4180 | ((set) & 0x007f)))
+
+    #define PSA_KEY_TYPE_SPAKE2P_GET_FAMILY(type) \
+        ((psa_ecc_family_t) ((type) & 0x007f))
+
+    #define PSA_KEY_TYPE_SPAKE2P_KEY_PAIR(curve) \
+        ((psa_key_type_t) (0x7400 | ((curve) & 0x007f)))
+
+    #define PSA_KEY_TYPE_SPAKE2P_PUBLIC_KEY(curve) \
+        ((psa_key_type_t) (0x4400 | ((curve) & 0x007f)))
+
+    #define PSA_KEY_TYPE_WPA3_SAE_DH_GET_FAMILY(type) \
+        ((psa_dh_family_t) ((type) & 0x007f))
+
+    #define PSA_KEY_TYPE_WPA3_SAE_DH(family) \
+        ((psa_key_type_t) (0x3300 | ((family) & 0x007f)))
+
+    #define PSA_KEY_TYPE_WPA3_SAE_ECC_GET_FAMILY(type) \
+        ((psa_ecc_family_t) ((type) & 0x007f))
+
+    #define PSA_KEY_TYPE_WPA3_SAE_ECC(curve) \
+        ((psa_key_type_t) (0x3280 | ((curve) & 0x007f)))
 
 Hash suspend state macros
 ~~~~~~~~~~~~~~~~~~~~~~~~~

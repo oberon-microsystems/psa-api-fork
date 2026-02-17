@@ -1,8 +1,8 @@
-.. SPDX-FileCopyrightText: Copyright 2018-2024 Arm Limited and/or its affiliates <open-source-office@arm.com>
+.. SPDX-FileCopyrightText: Copyright 2018-2025 Arm Limited and/or its affiliates <open-source-office@arm.com>
 .. SPDX-License-Identifier: CC-BY-SA-4.0 AND LicenseRef-Patent-license
 
 .. header:: psa/crypto
-    :seq: 24
+    :seq: 240
 
 .. _aead:
 
@@ -136,6 +136,8 @@ AEAD algorithms
     .. summary::
         The XChaCha20-Poly1305 AEAD algorithm.
 
+        .. versionadded:: 1.2
+
     XChaCha20-Poly1305 is a variation of the ChaCha20-Poly1305 AEAD algorithm, but uses a 192-bit nonce. The larger nonce provides much lower probability of nonce misuse.
 
     XChaCha20-Poly1305 requires a 24-byte nonce.
@@ -147,6 +149,33 @@ AEAD algorithms
     .. subsection:: Compatible key types
 
         | `PSA_KEY_TYPE_XCHACHA20`
+
+.. macro:: PSA_ALG_ASCON_AEAD128
+    :definition: ((psa_algorithm_t)0x05100700)
+
+    .. summary::
+        The Ascon-AEAD128 AEAD algorithm.
+
+        .. versionadded:: 1.4
+
+    There are two variants of Ascon-AEAD128 defined in :cite-title:`SP800-232`:
+
+    *   An implementation that supports Ascon-AEAD128 must provide the standard variant, using a 128-bit key.
+        This is defined in `[SP800-232]` §4.1.
+    *   An implementation can optionally also provide the nonce-masking variant, using a 256-bit key.
+        This is defined in `[SP800-232]` §4.2.2.
+
+    The variant is selected based on the size of the key.
+
+    Both variants require a 128-bit (16 byte) nonce, which must not be reused with the same key.
+
+    Implementations must support 16-byte tags.
+    Truncated tags of at least 4 bytes are permitted, but it is recommended that truncated tag sizes are at least 8 bytes.
+    See `[SP800-232]` §4.2.1 and §4.3.R4.
+
+    .. subsection:: Compatible key types
+
+        | `PSA_KEY_TYPE_ASCON`
 
 .. macro:: PSA_ALG_AEAD_WITH_SHORTENED_TAG
     :definition: /* specification-defined value */
@@ -195,6 +224,8 @@ AEAD algorithms
 
     .. summary::
         Macro to build an AEAD minimum-tag-length wildcard algorithm.
+
+        .. versionadded:: 1.1
 
     .. param:: aead_alg
         An AEAD algorithm: a value of type `psa_algorithm_t` such that :code:`PSA_ALG_IS_AEAD(aead_alg)` is true.
